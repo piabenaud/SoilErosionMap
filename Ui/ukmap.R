@@ -18,7 +18,8 @@
                            
                            h2("Observation explorer"),
                            
-                           selectInput("colour", "Colour", vars),
+                           selectInput("colour_low", "Lowland colour", vars),
+                           selectInput("colour_up", "Upland colour", vars),
                            
                            plotOutput("histRate", height = 220),
                            plotOutput("methRate", height = 200),
