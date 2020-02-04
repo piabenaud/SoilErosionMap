@@ -15,6 +15,7 @@ library(rgdal) # to load shapefiles and change coords (Needs libary(sp) as part 
 erosiondata <- read_csv('Data/main_database_WGS.csv')
 #head(erosiondata) # quick sense check
 
+
 # Load and transform transect data ----------------------------------------
 
 # name CRS codes for BNG and WSG84
@@ -51,6 +52,16 @@ erosiondata <- erosiondata %>%
                                  '2' = "Predicted to erode",
                                  '3' = "Sampling grid",
                                  '5' = "Other"))
+
+
+
+# Split into upland and lowland -------------------------------------------
+
+erosiondata_lowland <- erosiondata %>% 
+  filter(Land_cover != "Upland")
+
+erosiondata_upland <- erosiondata %>% 
+  filter(Land_cover == "Upland")
 
 
 # Preparation for data tab ------------------------------------------------

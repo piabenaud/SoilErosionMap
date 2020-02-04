@@ -16,9 +16,10 @@
                            draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
                            width = 330, height = "auto",
                            
-                           h2("Observation explorer"),
+                           h3("Observation explorer"),
                            
-                           selectInput("colour", "Colour", vars),
+                           selectInput("colour_low", "Lowland colour", vars),
+                           selectInput("colour_up", "Upland colour", vars),
                            
                            plotOutput("histRate", height = 220),
                            plotOutput("methRate", height = 200),

@@ -95,39 +95,49 @@ output$selectRate <- renderPlot({
 # Allocate colour palettes ------------------------------------------------
 
 # polygon colours - colours are not reactive
-polycol <-  colorBin(palette =c("#33a02c", "#b2df8a", "#1f78b4", "#ff7f00"), domain = transectsWGS$Rate_Med, bins = c(0,0.01,1,10,100), pretty = FALSE)
+polycol <-  colorBin(palette =c("black", "#abd9e9", "#74add1", "#313695"), domain = transectsWGS$Rate_Med, bins = c(0,0.01,1,10,100), pretty = FALSE)
 
-# This observer is responsible for maintaining the circles and legend,
+# These observers are responsible for maintaining the colour of the circles and legend,
 # according to the variables the user has chosen to map to color
 observe({
-  colorBy <- input$colour
+  colorBy_low <- input$colour_low
+  colorBy_up <- input$colour_up
   
-  if (colorBy == "Rslt_Analysis") {
-    colorData <- erosiondata$Rslt_Analysis
-    #pal <- colorBin(c("black", "#e0f3f8", "#74add1", "#313695"), colorData[colorData<= 100], c(0,0.01,1,10,100), na.color = "red" )
-    pal <- colorBin(c("black", "#e0f3f8", "#74add1", "#313695"), domain = c(0,100), bins = c(0,0.05,1,10,100), na.color = "red" )
-    pal2 <- colorBin(c("black", "yellow", "yellow", "yellow", "yellow"), colorData, c(0.000,0.01,1,10,100, 10000), pretty = FALSE)
+  rad_up <- ifelse(erosiondata_upland$Rslt_Analysis <= 100, ((erosiondata_upland$Rslt_Analysis+10)*50), 5000)
+   
+  if (colorBy_low == "Rslt_Analysis") {
+    colorData_low <- erosiondata_lowland$Rslt_Analysis
+    pal <- colorBin(c("black", "#abd9e9", "#74add1", "#313695"), domain = colorData_low, bins = c(0,0.01,1,10,100), na.color = NA)
   } else {
-    colorData <- erosiondata[[colorBy]]
-    pal <- colorFactor(c( "#33a02c", "#1f78b4", "#e31a1c","#ff7f00"), colorData)
-    pal2 <- colorFactor(c( "#33a02c", "#1f78b4", "#e31a1c","#ff7f00"), colorData)
+    colorData_low <- erosiondata_lowland[[colorBy_low]]
+    pal <- colorFactor(c( "#33a02c", "#1f78b4", "#e31a1c","#ff7f00"), colorData_low)
+  }
+ 
+  
+  if (colorBy_up == "Rslt_Analysis") {
+    colorData_up <- erosiondata_upland$Rslt_Analysis
+    pal2 <- colorBin(c("black", "#ffffbf", "#fdae61", "#f46d43", "#a50026"), colorData_up, c(0.000,0.01,1,10,100, 10000), pretty = FALSE, na.color = NA)
+  } else {
+    colorData_up <- erosiondata_upland[[colorBy_up]]
+    pal2 <- colorFactor(c("#33a02c", "#1f78b4", "#e31a1c","#ff7f00"), colorData_up)
   }
   
+
   leafletProxy("map") %>%  # adds shapes onto map
     clearShapes() %>%
     addPolygons(data = transectsWGS, color = "gray20",fillOpacity = 0.5, weight = 0.25, fillColor = ~polycol(Rate_Med)) %>%
-    addCircles(data = filter(erosiondata, Land_cover != "Upland"), group = "Lowland", ~Long, ~Lat, radius= 1000, layerId=~Site_ID,
-               stroke=FALSE, fillOpacity=0.65, fillColor=pal(colorData)) %>%
-    addCircles(data = filter(erosiondata, Land_cover == "Upland"), group = "Upland", ~Long, ~Lat, radius= 1000, layerId=~Site_ID,
-               stroke=FALSE, fillOpacity=0.65, fillColor=pal2(colorData)) %>%
-    addLegend("topleft", pal=pal, values=colorData, title=colorBy,
-              layerId="colorLegend") %>%
+    addCircles(data = erosiondata_lowland, group = "Lowland", ~Long, ~Lat, radius = ((erosiondata_lowland$Rslt_Analysis+10)*100), layerId=~Site_ID,
+               stroke=FALSE, fillOpacity=0.65, fillColor=pal(colorData_low)) %>%
+    addCircles(data = erosiondata_upland, group = "Upland", ~Long, ~Lat, radius= rad_up, layerId=~Site_ID,
+               stroke=FALSE, fillOpacity=0.65, fillColor=pal2(colorData_up)) %>%
+    addLegend("bottomleft",  group = "Upland", pal=pal2, values=colorData_up, title= "Upland data",
+              layerId="colorLegend1") %>%
+    addLegend("bottomleft", group = "Lowland", pal=pal, values=colorData_low, title= "Lowland data",
+              layerId="colorLegend2") %>% 
     addLayersControl(
       options = layersControlOptions(collapsed = FALSE),
-      baseGroups = c("Lowland", "Upland"),
-      position = "topleft") %>%
-    addLegend("topleft", group = "Lowland", pal=pal, values=erosiondata$Rslt_Analysis, title= "Erosion Rate",
-              layerId="colorLegend")
+      overlayGroups = c("Lowland", "Upland"),
+      position = "topleft")
 })
 
 

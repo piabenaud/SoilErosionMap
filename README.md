@@ -1,2 +1,2 @@
 # SoilErosionMap
-A open source and open access resource for the soil erosion community.
+An open source and open access resource for the soil erosion community.
