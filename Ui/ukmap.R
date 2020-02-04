@@ -21,9 +21,9 @@
                            selectInput("colour_low", "Lowland colour", vars),
                            selectInput("colour_up", "Upland colour", vars),
                            
-                           plotOutput("histRate", height = 200),
-                           plotOutput("methRate", height = 180),
-                           plotOutput("selectRate", height = 180)
+                           plotOutput("histRate", height = 220),
+                           plotOutput("methRate", height = 200),
+                           plotOutput("selectRate", height = 200)
              ),
              
              tags$div(id="cite",
