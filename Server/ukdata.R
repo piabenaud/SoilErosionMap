@@ -2,6 +2,7 @@
 
 output$erosiontable <- DT::renderDataTable(
   cleantable,
+  escape = FALSE,
   plugins = "ellipsis",
   options = list(
     pageLength = 25,
