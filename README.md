@@ -7,7 +7,7 @@ This work sits alongside a peer-reviewed [Geoderma] publication [XXX (2020) Nati
 
 Further information about the geodatabase can be found at xxxx
 
-To contribute data... 
+Data contribution has currently been restricted until publication of the associated peer-reviewed article.
 
 ---
 
@@ -16,7 +16,7 @@ To cite this resource please use XXXX (paper) and XXXX (github). For future coll
 ---
 This code has been developed from the Shiny [SuperZip] example by [jcheng5]
 
-[SoilErosionMap]: https://.com
+[SoilErosionMap]: https://piabenaud.shinyapps.io/SoilErosionMap
 [Geoderma]: https://www.journals.elsevier.com/geoderma
 [XXX et al (2020) National-scale geodata describe widespread accelerated soil erosion]: DOI
 [Superzip]: https://github.com/rstudio/shiny-examples/tree/master/063-superzip-example
