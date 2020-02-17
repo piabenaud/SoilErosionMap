@@ -20,17 +20,20 @@ erosiondata <- read_csv('Data/main_database_WGS.csv')
 
 # name CRS codes for BNG and WSG84
 #ukgrid <- "+init=epsg:27700" # BNG
-wgs84 <- "+init=epsg:4326" # WGS84
+#wgs84 <- "+init=epsg:4326" # WGS84
 
 # Load transect data
-transectsBNG <- readOGR("Data/transect", "transect")
+#transectsBNG <- readOGR("Data/transect", "transect")
 
 # Convert BNG coordinates to WGS84
-transectsWGS <- spTransform(transectsBNG, 
-                            CRS(wgs84))
+#transectsWGS <- spTransform(transectsBNG, 
+#                            CRS(wgs84))
 
-rm(transectsBNG) # tidy up
+#writeOGR(transectsWGS, "Data/transect", "transectsWGS", driver="ESRI Shapefile" )
+#rm(transectsBNG) # tidy up
 
+# Load transect data
+transectsWGS <- readOGR("Data/transect", "transectsWGS")
 
 # Some extra data preparation ---------------------------------------------
 
