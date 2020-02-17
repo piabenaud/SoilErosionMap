@@ -54,7 +54,13 @@ erosiondata <- erosiondata %>%
                                  '1' = "Known to erode",
                                  '2' = "Predicted to erode",
                                  '3' = "Sampling grid",
-                                 '5' = "Other"))
+                                 '4' = "Statistical design",
+                                 '5' = "Other")) %>% 
+  mutate(Stdy_Meth1 = recode_factor(Stdy_Meth1,
+                                    'Caesium-137' = "Caesium-137",
+                                    'Runoff and sediment collection' = "Runoff and sediment collection",
+                                    'Volumetric survey' = "Volumetric survey"))
+
 
 
 

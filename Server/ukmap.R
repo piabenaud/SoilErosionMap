@@ -95,7 +95,7 @@ output$selectRate <- renderPlot({
 # Allocate colour palettes ------------------------------------------------
 
 # polygon colours - colours are not reactive
-polycol <-  colorBin(palette =c("black", "#abd9e9", "#74add1", "#313695"), domain = transectsWGS$Rate_Med, bins = c(0,0.01,1,10,100), pretty = FALSE)
+polycol <-  colorBin(palette =c("black", "#74add1", "#4575b4", "#313695"), domain = transectsWGS$Rate_Med, bins = c(0,0.01,1,10,100), pretty = FALSE)
 
 # These observers are responsible for maintaining the colour of the circles and legend,
 # according to the variables the user has chosen to map to color
@@ -103,14 +103,15 @@ observe({
   colorBy_low <- input$colour_low
   colorBy_up <- input$colour_up
   
+  rad_low <- ifelse(erosiondata_lowland$Rslt_Analysis <= 10, ((erosiondata_lowland$Rslt_Analysis+10)*200), 5000)
   rad_up <- ifelse(erosiondata_upland$Rslt_Analysis <= 100, ((erosiondata_upland$Rslt_Analysis+10)*50), 5000)
    
   if (colorBy_low == "Rslt_Analysis") {
     colorData_low <- erosiondata_lowland$Rslt_Analysis
-    pal <- colorBin(c("black", "#abd9e9", "#74add1", "#313695"), domain = colorData_low, bins = c(0,0.01,1,10,100), na.color = NA)
+    pal <- colorBin(c("black", "#74add1", "#4575b4","#313695"), domain = colorData_low, bins = c(0,0.01,1,10,100), na.color = NA)
   } else {
     colorData_low <- erosiondata_lowland[[colorBy_low]]
-    pal <- colorFactor(c( "#33a02c", "#1f78b4", "#e31a1c","#ff7f00"), colorData_low)
+    pal <- colorFactor(c("#440154FF", "#31688EFF", "#35B779FF","#FDE725FF"), colorData_low)
   }
  
   
@@ -119,14 +120,14 @@ observe({
     pal2 <- colorBin(c("black", "#ffffbf", "#fdae61", "#f46d43", "#a50026"), colorData_up, c(0.000,0.01,1,10,100, 10000), pretty = FALSE, na.color = NA)
   } else {
     colorData_up <- erosiondata_upland[[colorBy_up]]
-    pal2 <- colorFactor(c("#33a02c", "#1f78b4", "#e31a1c","#ff7f00"), colorData_up)
+    pal2 <- colorFactor(c("#440154FF", "#31688EFF", "#35B779FF","#FDE725FF"), colorData_up)
   }
   
 
   leafletProxy("map") %>%  # adds shapes onto map
     clearShapes() %>%
     addPolygons(data = transectsWGS, color = "gray20",fillOpacity = 0.5, weight = 0.25, fillColor = ~polycol(Rate_Med)) %>%
-    addCircles(data = erosiondata_lowland, group = "Lowland", ~Long, ~Lat, radius = ((erosiondata_lowland$Rslt_Analysis+10)*100), layerId=~Site_ID,
+    addCircles(data = erosiondata_lowland, group = "Lowland", ~Long, ~Lat, radius = rad_low, layerId=~Site_ID,
                stroke=FALSE, fillOpacity=0.65, fillColor=pal(colorData_low)) %>%
     addCircles(data = erosiondata_upland, group = "Upland", ~Long, ~Lat, radius= rad_up, layerId=~Site_ID,
                stroke=FALSE, fillOpacity=0.65, fillColor=pal2(colorData_up)) %>%
