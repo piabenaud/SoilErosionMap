@@ -3,19 +3,29 @@
 
 The interactive web application can be viewed at [SoilErosionMap]
 
-This work sits alongside a peer-reviewed [Geoderma] publication [Benaud et al. (2020)] *National-scale geodata describe widespread accelerated soil erosion* 
+This work sits alongside a peer-reviewed [Geoderma] publication [Benaud et al. (2020)] *National-scale geodata describe widespread accelerated soil erosion.* 
 
-Further information about the geodatabase can be found at xxxxxx
+This work was undertaken as part of Defra-funded Project [SP1311]: *Piloting a cost-effective for monitoring soil erosion in England and Wales*.
 
-Data contribution is restricted until publication of the associated journal article.
+Further information about the geodatabase can be found at <WEBLINK>.
 
 ---
 
-To run the app locally, please run: `runGitHub( "<SoilErosionMap>", "<piabenaud>")` in your R console. You will need to install the following packages, which can be acheived by copying and pasting the following code into your R console:
+Please note: data contribution functionality will be restricted until publication of the associated journal article.
+
+---
+
+To run the app locally, please run the following in your R console.: 
+```R
+library(shiny)
+runGitHub( "SoilErosionMap", "piabenaud")
+```
+To do this you will need the following packages, which can be installed by running this code in your R console:
  ```R
  install.packages(c("shiny", "leaflet", "ggplot", "dplyr", "readr", "rgdal", "scales"))
  ```
-
+ R can be downloaded from <https://www.r-project.org/> and I use the Rstudio IDE, available from <https://rstudio.com/products/rstudio/download/>
+ 
 ---
 
 To cite this resource please use <DOI:TBD> (Journal article) and [![DOI](https://zenodo.org/badge/DOI/http://10.5281/zenodo.3670112.svg)](https://doi.org/http://10.5281/zenodo.3670112) (GitHub code). 
@@ -33,5 +43,5 @@ This code has been developed from the Shiny [SuperZip] example by [jcheng5]
 [Pia Benaud]: http://geography.exeter.ac.uk/staff/index.php?web_id=Pia_Benaud
 [Superzip]: https://github.com/rstudio/shiny-examples/tree/master/063-superzip-example
 [jcheng5]: https://github.com/jcheng5
-
+[SP1311]: http://randd.defra.gov.uk/Default.aspx?Module=More&Location=None&ProjectID=18369
 
