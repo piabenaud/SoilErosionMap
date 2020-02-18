@@ -8,7 +8,7 @@ rm(list=ls()) #clear everything (to check app fully works)
 library(shiny)
 library(leaflet)
 library(ggplot2)
-
+library(htmltools)
 library(dplyr)
 library(readr)
 library(rgdal) 

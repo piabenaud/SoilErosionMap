@@ -63,7 +63,6 @@ erosiondata <- erosiondata %>%
 
 
 
-
 # Split into upland and lowland -------------------------------------------
 
 erosiondata_lowland <- erosiondata %>% 
@@ -79,10 +78,6 @@ erosiondata_upland <- erosiondata %>%
 erosiondata <- erosiondata %>% 
   arrange(Land_cover, desc(Rslt_Analysis))
 
-
-# Make active link --------------------------------------------------------
-
-#erosiondata$Link <- paste0("<a href='",erosiondata$Link,"'>",erosiondata$Link,"</a>")
 
 
 # select data to be visualised

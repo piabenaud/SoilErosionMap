@@ -8,10 +8,11 @@
 
 output$map <- renderLeaflet({
   leaflet() %>%  
-    setView(lng = -1.542, lat = 54.992, zoom = 6)%>% 
-    addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
+    setView(lng = -1.542, lat = 54.992, zoom = 6) %>% 
+    addProviderTiles(providers$OpenStreetMap.Mapnik, group = "Colour") %>%
     addProviderTiles(providers$Esri.WorldImagery,
-                     options = providerTileOptions(opacity = 0.3))
+                     options = providerTileOptions(opacity = 0.3), group = "Colour") %>% 
+    addProviderTiles(providers$Esri.WorldGrayCanvas, group = "Gray-scale")
 })
 
 
@@ -92,10 +93,50 @@ output$selectRate <- renderPlot({
 }) 
 
 
-# Allocate colour palettes ------------------------------------------------
+# Transect data vis -----------------------------------------------------------
 
 # polygon colours - colours are not reactive
 polycol <-  colorBin(palette =c("black", "#74add1", "#4575b4", "#313695"), domain = transectsWGS$Rate_Med, bins = c(0,0.01,1,10,100), pretty = FALSE)
+
+popup_tran <- paste("<b>","County:","</b>", transectsWGS$County, "<br>",
+                  "<b>","Year:","</b>", transectsWGS$Study_star, "<br>",
+                  "<b>","Method:","</b>", transectsWGS$Study_meth, "<br>",
+                  "<b>","Area of farmland surveyed (ha):","</b>", transectsWGS$Study_area, "<br>",
+                  "<b>","Erosion rate - Median:","</b>", transectsWGS$Rate_Med, "<br>",
+                  "<b>","Erosion rate - Maximum:","</b>", transectsWGS$Rate_Max, "<br>",
+                  "<b>","Reference:","</b>", transectsWGS$Reference_)
+
+
+# Lowland popups ----------------------------------------------------------
+
+popup_low <- paste("<b>","Land Cover:","</b>", erosiondata_lowland$Land_cover, "<br>",
+                  "<b>","Study ID:","</b>", erosiondata_lowland$Site_ID, "<br>",
+                  "<b>","Study Start:","</b>", htmlEscape(erosiondata_lowland$Stdy_Start), "<br>",
+                  "<b>","Study Finish:","</b>", htmlEscape(erosiondata_lowland$Stdy_Fin), "<br>",
+                  "<b>","County:","</b>", erosiondata_lowland$County_Dis, "<br>",
+                  "<b>","Soil Association:","</b>", htmlEscape(erosiondata_lowland$Soil_Assoc), "<br>",
+                  "<b>","Method:","</b>", erosiondata_lowland$Stdy_Meth1, "<br>",
+                  "<b>","Scale:","</b>", erosiondata_lowland$Stdy_Scale, "<br>",
+                  "<b>","Erosion rate: Mean:","</b>", erosiondata_lowland$Rslt_Mean, "<br>",
+                  "<b>","Erosion rate: Median:","</b>", erosiondata_lowland$Rslt_Med, "<br>",
+                  "<b>","Erosion rate: Minimum:","</b>", erosiondata_lowland$Rslt_Min, "<br>",
+                  "<b>","Erosion rate: Maximum:","</b>", erosiondata_lowland$Rslt_Max, "<br>",
+                  "<b>","Erosion rate: Net","</b>", erosiondata_lowland$Rslt_Net, "<br>",
+                  "<b>","Erosion rate: Gross:","</b>", erosiondata_lowland$Rslt_Gross, "<br>",
+                  "<b>","Erosion volume:","</b>", erosiondata_lowland$Rslt_Vol, "<br>",
+                  "<b>","Erosion rate: Calculations:","</b>", erosiondata_lowland$Rslt_Analysis, "<br>",
+                  "<b>","Reference","</b>", erosiondata_lowland$Reference, "<br>",
+                  "<b>",erosiondata_lowland$Link,"</b>")
+
+
+
+# Specify marker radius --------------------------------------------------------
+
+rad_low <- ifelse(erosiondata_lowland$Rslt_Analysis <= 10, ((erosiondata_lowland$Rslt_Analysis+10)*200), 5000)
+rad_up <- ifelse(erosiondata_upland$Rslt_Analysis <= 100, ((erosiondata_upland$Rslt_Analysis+10)*50), 5000)
+
+
+# Allocate colour palettes ------------------------------------------------
 
 # These observers are responsible for maintaining the colour of the circles and legend,
 # according to the variables the user has chosen to map to color
@@ -103,9 +144,6 @@ observe({
   colorBy_low <- input$colour_low
   colorBy_up <- input$colour_up
   
-  rad_low <- ifelse(erosiondata_lowland$Rslt_Analysis <= 10, ((erosiondata_lowland$Rslt_Analysis+10)*200), 5000)
-  rad_up <- ifelse(erosiondata_upland$Rslt_Analysis <= 100, ((erosiondata_upland$Rslt_Analysis+10)*50), 5000)
-   
   if (colorBy_low == "Rslt_Analysis") {
     colorData_low <- erosiondata_lowland$Rslt_Analysis
     pal <- colorBin(c("black", "#74add1", "#4575b4","#313695"), domain = colorData_low, bins = c(0,0.01,1,10,100), na.color = NA)
@@ -114,7 +152,6 @@ observe({
     pal <- colorFactor(c("#440154FF", "#31688EFF", "#35B779FF","#FDE725FF"), colorData_low)
   }
  
-  
   if (colorBy_up == "Rslt_Analysis") {
     colorData_up <- erosiondata_upland$Rslt_Analysis
     pal2 <- colorBin(c("black", "#ffffbf", "#fdae61", "#f46d43", "#a50026"), colorData_up, c(0.000,0.01,1,10,100, 10000), pretty = FALSE, na.color = NA)
@@ -122,64 +159,65 @@ observe({
     colorData_up <- erosiondata_upland[[colorBy_up]]
     pal2 <- colorFactor(c("#440154FF", "#31688EFF", "#35B779FF","#FDE725FF"), colorData_up)
   }
-  
+
 
   leafletProxy("map") %>%  # adds shapes onto map
     clearShapes() %>%
-    addPolygons(data = transectsWGS, color = "gray20",fillOpacity = 0.5, weight = 0.25, fillColor = ~polycol(Rate_Med)) %>%
+    addPolygons(data = transectsWGS, color = "gray20", fillOpacity = 0.5, weight = 0.25, fillColor = ~polycol(Rate_Med), popup = popup_tran) %>%
     addCircles(data = erosiondata_lowland, group = "Lowland", ~Long, ~Lat, radius = rad_low, layerId=~Site_ID,
-               stroke=FALSE, fillOpacity=0.65, fillColor=pal(colorData_low)) %>%
+               stroke=FALSE, fillOpacity=0.65, fillColor=pal(colorData_low), popup = popup_low) %>%
     addCircles(data = erosiondata_upland, group = "Upland", ~Long, ~Lat, radius= rad_up, layerId=~Site_ID,
                stroke=FALSE, fillOpacity=0.65, fillColor=pal2(colorData_up)) %>%
-    addLegend("bottomleft",  group = "Upland", pal=pal2, values=colorData_up, title= "Upland data",
-              layerId="colorLegend1") %>%
-    addLegend("bottomleft", group = "Lowland", pal=pal, values=colorData_low, title= "Lowland data",
-              layerId="colorLegend2") %>% 
     addLayersControl(
       options = layersControlOptions(collapsed = FALSE),
       overlayGroups = c("Lowland", "Upland"),
-      position = "topleft")
+      baseGroups = c("Colour", "Gray-scale"),
+      position = "topleft") %>% 
+    addLegend("topleft", group = "Lowland", pal=pal, values=colorData_low, title= "Lowland data",
+              layerId="colorLegend2") %>% 
+    addLegend("topleft",  group = "Upland", pal=pal2, values=colorData_up, title= "Upland data",
+              layerId="colorLegend1")
 })
 
 
 # Create pop-ups to display on click --------------------------------------
 
-showSitePopup <- function(Site_ID, lat, lng) {
-  selectedSite <- erosiondata[erosiondata$Site_ID == Site_ID,]
-  content <- as.character(tagList(
-    tags$h5("Land Cover: ", selectedSite$Land_cover),
-    sprintf("Study ID: %s", selectedSite$Site_ID),tags$br(),
-    sprintf("Study Start: %s", selectedSite$Stdy_Start),tags$br(),
-    sprintf("Study Finish: %s", selectedSite$Stdy_Fin),tags$br(),
-    sprintf("County: %s", selectedSite$County_Dis),tags$br(),
-    sprintf("Soil Association: %s", selectedSite$Soil_Assoc),tags$br(),
-    sprintf("Soil Series: %s", selectedSite$Soil_series),tags$br(),
-    sprintf("Scale: %s", selectedSite$Stdy_Scale),tags$br(),
-    sprintf("Method: %s", selectedSite$Stdy_Meth1),tags$br(),
-    sprintf("Erosion:Mean: %s", selectedSite$Rslt_Mean),tags$br(),
-    sprintf("Erosion:Median: %s", selectedSite$Rslt_Med),tags$br(),
-    sprintf("Erosion:Minimum: %s", selectedSite$Rslt_Min),tags$br(),
-    sprintf("Erosion:Maximum: %s", selectedSite$Rslt_Max),tags$br(),
-    sprintf("Erosion:Net: %s", selectedSite$Rslt_Net),tags$br(),
-    sprintf("Erosion:Gross: %s", selectedSite$Rslt_Gross),tags$br(),
-    sprintf("Erosion:Volume: %s", selectedSite$Rslt_Vol),tags$br(),
-    sprintf("Erosion:Calculations: %s", selectedSite$Rslt_Analysis),tags$br(),
-    sprintf("Process: %s", selectedSite$Pathway_1),tags$br(),
-    sprintf("Reference: %s", selectedSite$Reference),tags$br(),
-    sprintf("Link: %s", selectedSite$Link)
-  ))
-  leafletProxy("map") %>% addPopups(lng, lat, content, layerId = Site_ID)
-}
+#showSitePopup <- function(Site_ID, lat, lng) {
+#  selectedSite <- erosiondata[erosiondata$Site_ID == Site_ID,]
+#  content <- as.character(tagList(
+#    tags$h5("Land Cover: ", selectedSite$Land_cover),
+#    sprintf("Study ID: %s", selectedSite$Site_ID),tags$br(),
+#    sprintf("Study Start: %s", selectedSite$Stdy_Start),tags$br(),
+#    sprintf("Study Finish: %s", selectedSite$Stdy_Fin),tags$br(),
+#    sprintf("County: %s", selectedSite$County_Dis),tags$br(),
+#    sprintf("Soil Association: %s", selectedSite$Soil_Assoc),tags$br(),
+#    sprintf("Soil Series: %s", selectedSite$Soil_series),tags$br(),
+#    sprintf("Scale: %s", selectedSite$Stdy_Scale),tags$br(),
+#    sprintf("Method: %s", selectedSite$Stdy_Meth1),tags$br(),
+#    sprintf("Erosion:Mean: %s", selectedSite$Rslt_Mean),tags$br(),
+#    sprintf("Erosion:Median: %s", selectedSite$Rslt_Med),tags$br(),
+#    sprintf("Erosion:Minimum: %s", selectedSite$Rslt_Min),tags$br(),
+#    sprintf("Erosion:Maximum: %s", selectedSite$Rslt_Max),tags$br(),
+#    sprintf("Erosion:Net: %s", selectedSite$Rslt_Net),tags$br(),
+#    sprintf("Erosion:Gross: %s", selectedSite$Rslt_Gross),tags$br(),
+#    sprintf("Erosion:Volume: %s", selectedSite$Rslt_Vol),tags$br(),
+#    sprintf("Erosion:Calculations: %s", selectedSite$Rslt_Analysis),tags$br(),
+#    sprintf("Process: %s", selectedSite$Pathway_1),tags$br(),
+#    sprintf("Reference: %s", selectedSite$Reference),tags$br(),
+#    sprintf("Link: %s", selectedSite$Link)
+#  ))
+#  leafletProxy("map") %>% addPopups(lng, lat, content, layerId = Site_ID)
+#}
 
 # When map is clicked, show a popup with erosion observation information
-observe({
-  leafletProxy("map") %>% clearPopups()
-  event <- input$map_shape_click
-  if (is.null(event))
-    return()
+#observe({
+#  leafletProxy("map") %>% clearPopups()
+#  event <- input$map_shape_click
+#  if (is.null(event))
+#    return()
   
-  isolate({
-    showSitePopup(event$id, event$lat, event$lng)
-  })
-})
+#  isolate({
+#    showSitePopup(event$id, event$lat, event$lng)
+#  })
+#})
 
