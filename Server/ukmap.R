@@ -109,25 +109,41 @@ popup_tran <- paste("<b>","County:","</b>", transectsWGS$County, "<br>",
 
 # Lowland popups ----------------------------------------------------------
 
-popup_low <- paste("<b>","Land Cover:","</b>", erosiondata_lowland$Land_cover, "<br>",
-                  "<b>","Study ID:","</b>", erosiondata_lowland$Site_ID, "<br>",
-                  "<b>","Study Start:","</b>", htmlEscape(erosiondata_lowland$Stdy_Start), "<br>",
-                  "<b>","Study Finish:","</b>", htmlEscape(erosiondata_lowland$Stdy_Fin), "<br>",
-                  "<b>","County:","</b>", erosiondata_lowland$County_Dis, "<br>",
-                  "<b>","Soil Association:","</b>", htmlEscape(erosiondata_lowland$Soil_Assoc), "<br>",
-                  "<b>","Method:","</b>", erosiondata_lowland$Stdy_Meth1, "<br>",
-                  "<b>","Scale:","</b>", erosiondata_lowland$Stdy_Scale, "<br>",
-                  "<b>","Erosion rate: Mean:","</b>", erosiondata_lowland$Rslt_Mean, "<br>",
-                  "<b>","Erosion rate: Median:","</b>", erosiondata_lowland$Rslt_Med, "<br>",
-                  "<b>","Erosion rate: Minimum:","</b>", erosiondata_lowland$Rslt_Min, "<br>",
-                  "<b>","Erosion rate: Maximum:","</b>", erosiondata_lowland$Rslt_Max, "<br>",
-                  "<b>","Erosion rate: Net","</b>", erosiondata_lowland$Rslt_Net, "<br>",
-                  "<b>","Erosion rate: Gross:","</b>", erosiondata_lowland$Rslt_Gross, "<br>",
-                  "<b>","Erosion volume:","</b>", erosiondata_lowland$Rslt_Vol, "<br>",
-                  "<b>","Erosion rate: Calculations:","</b>", erosiondata_lowland$Rslt_Analysis, "<br>",
-                  "<b>","Reference","</b>", erosiondata_lowland$Reference, "<br>",
-                  "<b>",erosiondata_lowland$Link,"</b>")
+popup_low <- paste0("<b>","Land Cover: ","</b>", erosiondata_lowland$Land_cover, "<br>",
+                  "<b>","Study ID: ","</b>", erosiondata_lowland$Site_ID, "<br>",
+                  "<b>","Study Start: ","</b>", htmlEscape(erosiondata_lowland$Stdy_Start), "<br>",
+                  "<b>","Study Finish: ","</b>", htmlEscape(erosiondata_lowland$Stdy_Fin), "<br>",
+                  "<b>","County: ","</b>", erosiondata_lowland$County_Dis, "<br>",
+                  "<b>","Soil Association: ","</b>", htmlEscape(erosiondata_lowland$Soil_Assoc), "<br>",
+                  "<b>","Method: ","</b>", erosiondata_lowland$Stdy_Meth1, "<br>",
+                  "<b>","Scale: ","</b>", erosiondata_lowland$Stdy_Scale, "<br>",
+                  "<b>","Site selection: ","</b>", erosiondata_lowland$Site_selection, "<br>",
+                  "<b>","Erosion rate: Mean: ","</b>", erosiondata_lowland$Rslt_Mean, "<br>",
+                  "<b>","Erosion rate: Median: ","</b>", erosiondata_lowland$Rslt_Med, "<br>",
+                  "<b>","Erosion rate: Minimum: ","</b>", erosiondata_lowland$Rslt_Min, "<br>",
+                  "<b>","Erosion rate: Maximum: ","</b>", erosiondata_lowland$Rslt_Max, "<br>",
+                  "<b>","Erosion rate: Net: ","</b>", erosiondata_lowland$Rslt_Net, "<br>",
+                  "<b>","Erosion rate: Gross: ","</b>", erosiondata_lowland$Rslt_Gross, "<br>",
+                  "<b>","Erosion volume: ","</b>", erosiondata_lowland$Rslt_Vol, "<br>",
+                  "<b>","Erosion rate: Calculations: ","</b>", erosiondata_lowland$Rslt_Analysis, "<br>",
+                  "<b>","Reference: ","</b>", erosiondata_lowland$Reference, "<br>",
+                  "<a href='", erosiondata_lowland$Link, "' target='_blank'>", "Link</a>")
 
+# Upland popups ----------------------------------------------------------
+
+popup_up <- paste0("<b>","Land Cover: ","</b>", erosiondata_upland$Land_cover, "<br>",
+                    "<b>","Study ID: ","</b>", erosiondata_upland$Site_ID, "<br>",
+                    "<b>","Study Start: ","</b>", htmlEscape(erosiondata_upland$Stdy_Start), "<br>",
+                    "<b>","Study Finish: ","</b>", htmlEscape(erosiondata_upland$Stdy_Fin), "<br>",
+                    "<b>","Site selection: ","</b>", erosiondata_upland$Site_selection, "<br>",
+                    "<b>","County: ","</b>", erosiondata_upland$County_Dis, "<br>",
+                    "<b>","Soil Association: ","</b>", htmlEscape(erosiondata_upland$Soil_Assoc), "<br>",
+                    "<b>","Method: ","</b>", erosiondata_upland$Stdy_Meth1, "<br>",
+                    "<b>","Scale: ","</b>", erosiondata_upland$Stdy_Scale, "<br>",
+                    "<b>","Erosion volume: ","</b>", erosiondata_upland$Rslt_Vol, "<br>",
+                    "<b>","Erosion rate: Calculations: ","</b>", erosiondata_upland$Rslt_Analysis, "<br>",
+                    "<b>","Reference: ","</b>", erosiondata_upland$Reference, "<br>",
+                    "<a href='", erosiondata_upland$Link, "' target='_blank'>", "Link</a>")
 
 
 # Specify marker radius --------------------------------------------------------
@@ -167,7 +183,7 @@ observe({
     addCircles(data = erosiondata_lowland, group = "Lowland", ~Long, ~Lat, radius = rad_low, layerId=~Site_ID,
                stroke=FALSE, fillOpacity=0.65, fillColor=pal(colorData_low), popup = popup_low) %>%
     addCircles(data = erosiondata_upland, group = "Upland", ~Long, ~Lat, radius= rad_up, layerId=~Site_ID,
-               stroke=FALSE, fillOpacity=0.65, fillColor=pal2(colorData_up)) %>%
+               stroke=FALSE, fillOpacity=0.65, fillColor=pal2(colorData_up), popup = popup_up) %>%
     addLayersControl(
       options = layersControlOptions(collapsed = FALSE),
       overlayGroups = c("Lowland", "Upland"),

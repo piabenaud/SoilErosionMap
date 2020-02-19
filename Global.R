@@ -61,7 +61,9 @@ erosiondata <- erosiondata %>%
                                     'Runoff and sediment collection' = "Runoff and sediment collection",
                                     'Volumetric survey' = "Volumetric survey"))
 
-
+# arrange data by Rslt_Analysis (used in paper) for better visualisation
+erosiondata <- erosiondata %>% 
+  arrange(Land_cover, desc(Rslt_Analysis))
 
 # Split into upland and lowland -------------------------------------------
 
@@ -74,11 +76,9 @@ erosiondata_upland <- erosiondata %>%
 
 # Preparation for data tab ------------------------------------------------
 
-# arrange data by Rslt_Analysis (used in paper) for better visualisation
-erosiondata <- erosiondata %>% 
-  arrange(Land_cover, desc(Rslt_Analysis))
 
-
+# active link for datatable tab
+#erosiondata$Link <- paste0("<a href='", erosiondata$Link, "' target='_blank'>", "More info</a>")
 
 # select data to be visualised
 cleantable <- erosiondata %>%
@@ -104,7 +104,8 @@ cleantable <- erosiondata %>%
          "Reference" = Reference,
          "Link" = Link,
          "Lat" = Lat,
-         "Long" = Long)
+         "Long" = Long) %>% 
+  mutate(Link = paste0("<a href='", Link,"' target='_blank'>Link</a>")) #html format for link
 
 
 # Function for adding n to plots ------------------------------------------
