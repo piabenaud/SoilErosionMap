@@ -1,7 +1,38 @@
 
-#### Interactive global map ####
+#########################################################################################
+#### Interactive global  #########################################################
+#########################################################################################
 
-palG <- colorBin(c("#33a02c", "#b2df8a", "#1f78b4", "#ff7f00", "#e31a1c"), erosiondata$Rslt_Analysis, c(0.000,0.01,1,10,100, 10000), pretty = FALSE)
+
+# Set the colour palette --------------------------------------------------
+
+palG <- colorBin(c("black", "#FDE725FF", "#31688EFF", "#440154FF", "#35B779FF"), erosiondata$Rslt_Analysis, c(0.000,0.01,1,10,100,10000), pretty = FALSE)
+
+
+# Determine pop-up content ------------------------------------------------
+
+popup_g <- paste0("<b>","Land Cover: ","</b>", erosiondata$Land_cover, "<br>",
+                    "<b>","Study ID: ","</b>", erosiondata$Site_ID, "<br>",
+                    "<b>","Study Start: ","</b>", htmlEscape(erosiondata$Stdy_Start), "<br>",
+                    "<b>","Study Finish: ","</b>", htmlEscape(erosiondata$Stdy_Fin), "<br>",
+                    "<b>","County: ","</b>", erosiondata$County_Dis, "<br>",
+                    "<b>","Soil Association: ","</b>", htmlEscape(erosiondata$Soil_Assoc), "<br>",
+                    "<b>","Method: ","</b>", erosiondata$Stdy_Meth1, "<br>",
+                    "<b>","Scale: ","</b>", erosiondata$Stdy_Scale, "<br>",
+                    "<b>","Site selection: ","</b>", erosiondata$Site_selection, "<br>",
+                    "<b>","Erosion rate: Mean: ","</b>", erosiondata$Rslt_Mean, "<br>",
+                    "<b>","Erosion rate: Median: ","</b>", erosiondata$Rslt_Med, "<br>",
+                    "<b>","Erosion rate: Minimum: ","</b>", erosiondata$Rslt_Min, "<br>",
+                    "<b>","Erosion rate: Maximum: ","</b>", erosiondata$Rslt_Max, "<br>",
+                    "<b>","Erosion rate: Net: ","</b>", erosiondata$Rslt_Net, "<br>",
+                    "<b>","Erosion rate: Gross: ","</b>", erosiondata$Rslt_Gross, "<br>",
+                    "<b>","Erosion volume: ","</b>", erosiondata$Rslt_Vol, "<br>",
+                    "<b>","Erosion rate: Calculations: ","</b>", erosiondata$Rslt_Analysis, "<br>",
+                    "<b>","Reference: ","</b>", erosiondata$Reference, "<br>",
+                    "<b>",erosiondata$Link,"</b>")
+
+
+# Make the map ------------------------------------------------------------
 
 output$mapG <- renderLeaflet({
   leaflet() %>%  
@@ -22,8 +53,8 @@ output$mapG <- renderLeaflet({
                                                                                  }    
                                                                                  return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
 }"))) %>%
-      addCircles(data = erosiondata, group = "Erosion Rate", ~Long, ~Lat, radius= 1000, layerId=~Site_ID,
-                 stroke=FALSE, fillOpacity=0.65, fillColor = ~palG(Rslt_Analysis)) %>%
+      addCircles(data = erosiondata, group = "Erosion Rate", ~Long, ~Lat, radius= 1500, layerId=~Site_ID,
+                 stroke=FALSE, fillOpacity=0.65, fillColor = ~palG(Rslt_Analysis), popup = popup_g) %>%
     addLayersControl(
       options = layersControlOptions(collapsed = FALSE),
       baseGroups = c("Cluster", "Erosion Rate"),
@@ -33,6 +64,9 @@ output$mapG <- renderLeaflet({
   })
 
 
+
+# Build the reactive plots ------------------------------------------------
+
 # A reactive expression that returns the set of observations that are in bounds right now
 obsInBoundsG <- reactive({
   if (is.null(input$mapG_bounds))
@@ -41,8 +75,7 @@ obsInBoundsG <- reactive({
   latRng <- range(bounds$north, bounds$south)
   lngRng <- range(bounds$east, bounds$west)
   
-  ##############################################################################
-  ##########-------UPDATE to GOOGLEDOC!!!-------------################
+  
   subset(erosiondata,
          Lat >= latRng[1] & Lat <= latRng[2] &
            Long >= lngRng[1] & Long <= lngRng[2] &
@@ -85,42 +118,4 @@ output$methRateG <- renderPlot({
 }) 
 
 
-# Show a popup at the given location
-showSitePopupG <- function(Site_ID, lat, lng) {
-  selectedSiteG <- erosiondata[erosiondata$Site_ID == Site_ID,]
-  content <- as.character(tagList(
-    tags$h5("Land Cover: ", selectedSiteG$Land_cover),
-    sprintf("Study ID: %s", selectedSiteG$Site_ID),tags$br(),
-    sprintf("Study Start: %s", selectedSiteG$Stdy_Start),tags$br(),
-    sprintf("Study Finish: %s", selectedSiteG$Stdy_Fin),tags$br(),
-    sprintf("County: %s", selectedSiteG$County_Dis),tags$br(),
-    sprintf("Soil Association: %s", selectedSiteG$Soil_Assoc),tags$br(),
-    sprintf("Soil Series: %s", selectedSiteG$Soil_series),tags$br(),
-    sprintf("Scale: %s", selectedSiteG$Stdy_Scale),tags$br(),
-    sprintf("Method: %s", selectedSiteG$Stdy_Meth1),tags$br(),
-    sprintf("Erosion:Mean: %s", selectedSiteG$Rslt_Mean),tags$br(),
-    sprintf("Erosion:Median: %s", selectedSiteG$Rslt_Med),tags$br(),
-    sprintf("Erosion:Minimum: %s", selectedSiteG$Rslt_Min),tags$br(),
-    sprintf("Erosion:Maximum: %s", selectedSiteG$Rslt_Max),tags$br(),
-    sprintf("Erosion:Net: %s", selectedSiteG$Rslt_Net),tags$br(),
-    sprintf("Erosion:Gross: %s", selectedSiteG$Rslt_Gross),tags$br(),
-    sprintf("Erosion:Volume: %s", selectedSiteG$Rslt_Vol),tags$br(),
-    sprintf("Erosion:Calculations: %s", selectedSiteG$Rslt_Analysis),tags$br(),
-    sprintf("Process: %s", selectedSiteG$Pathway_1),tags$br(),
-    sprintf("Reference: %s", selectedSiteG$Reference),tags$br(),
-    sprintf("Link: %s", selectedSiteG$Link)
-  ))
-  leafletProxy("mapG") %>% addPopups(lng, lat, content, layerId = Site_ID)
-}
-
-# When map is clicked, show a popup with erosion observation information
-observe({
-  leafletProxy("mapG") %>% clearPopups()
-  event <- input$mapG_shape_click
-  if (is.null(event))
-    return()
-  
-  isolate({
-    showSitePopupG(event$id, event$lat, event$lng)
-  })
-})
+## Done
