@@ -101,6 +101,7 @@ polycol <-  colorBin(palette =c("black", "#74add1", "#4575b4", "#313695"), domai
 popup_tran <- paste("<b>","County:","</b>", transectsWGS$County, "<br>",
                   "<b>","Year:","</b>", transectsWGS$Study_star, "<br>",
                   "<b>","Method:","</b>", transectsWGS$Study_meth, "<br>",
+                  "<b>","Site selection:","</b>", "Predicted to erode", "<br>",
                   "<b>","Area of farmland surveyed (ha):","</b>", transectsWGS$Study_area, "<br>",
                   "<b>","Erosion rate - Median:","</b>", transectsWGS$Rate_Med, "<br>",
                   "<b>","Erosion rate - Maximum:","</b>", transectsWGS$Rate_Max, "<br>",

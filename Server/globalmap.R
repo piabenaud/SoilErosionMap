@@ -6,7 +6,7 @@
 
 # Set the colour palette --------------------------------------------------
 
-palG <- colorBin(c("black", "#FDE725FF", "#31688EFF", "#440154FF", "#35B779FF"), erosiondata$Rslt_Analysis, c(0.000,0.01,1,10,100,10000), pretty = FALSE)
+palG <- colorBin(c("black", "#31688EFF", "#35B779FF", "#440154FF", "#FDE725FF"), erosiondata$Rslt_Analysis, c(0.000,0.01,1,10,100,10000), pretty = FALSE)
 
 
 # Determine pop-up content ------------------------------------------------
@@ -29,7 +29,7 @@ popup_g <- paste0("<b>","Land Cover: ","</b>", erosiondata$Land_cover, "<br>",
                     "<b>","Erosion volume: ","</b>", erosiondata$Rslt_Vol, "<br>",
                     "<b>","Erosion rate: Calculations: ","</b>", erosiondata$Rslt_Analysis, "<br>",
                     "<b>","Reference: ","</b>", erosiondata$Reference, "<br>",
-                    "<b>",erosiondata$Link,"</b>")
+                    "<b>","<a href='", erosiondata$Link, "' target='_blank'>", "Link</a>","</b>")
 
 
 # Make the map ------------------------------------------------------------
