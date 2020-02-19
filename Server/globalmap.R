@@ -57,7 +57,7 @@ output$mapG <- renderLeaflet({
                  stroke=FALSE, fillOpacity=0.65, fillColor = ~palG(Rslt_Analysis), popup = popup_g) %>%
     addLayersControl(
       options = layersControlOptions(collapsed = FALSE),
-      baseGroups = c("Cluster", "Erosion Rate"),
+      overlayGroups = c("Cluster", "Erosion Rate"),
       position = "topleft") %>%
     addLegend("topleft", group = "Erosion Rate", pal=palG, values=erosiondata$Rslt_Analysis, title= "Erosion Rate",
               layerId="colorLegend")
