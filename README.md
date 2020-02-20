@@ -34,7 +34,8 @@ For future collaborations or to suggest improvements to the Shiny app please con
 
 --- 
 
-This code has been developed from the Shiny [SuperZip] example by [jcheng5]
+This code has been developed using some of the code from the Shiny [SuperZip] example by [jcheng5] and the [DT Editor] by [jienagu]
+
 
 
 [SoilErosionMap]: https://piabenaud.shinyapps.io/SoilErosionMap
@@ -44,4 +45,5 @@ This code has been developed from the Shiny [SuperZip] example by [jcheng5]
 [Superzip]: https://github.com/rstudio/shiny-examples/tree/master/063-superzip-example
 [jcheng5]: https://github.com/jcheng5
 [SP1311]: http://randd.defra.gov.uk/Default.aspx?Module=More&Location=None&ProjectID=18369
-
+[DT Editor]: https://github.com/jienagu/DT-Editor
+[jienagu]: https://github.com/jienagu
