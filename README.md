@@ -11,10 +11,6 @@ Further information about the geodatabase can be found at <WEBLINK>.
 
 ---
 
-Please note: data contribution functionality will be restricted until publication of the associated journal article.
-
----
-
 To run the app locally, please run the following in your R console.: 
 ```R
 library(shiny)
@@ -34,7 +30,7 @@ For future collaborations or to suggest improvements to the Shiny app please con
 
 --- 
 
-This code has been developed using some of the code from the Shiny [SuperZip] example by [jcheng5] and the [DT Editor] by [jienagu]
+This code has been developed using some of the code from the Shiny [SuperZip] example by [jcheng5] and the [DT Editor] made by [jienagu]
 
 
 
