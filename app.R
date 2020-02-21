@@ -13,6 +13,8 @@ library(dplyr)
 library(readr)
 library(rgdal) 
 library(scales) # for log1p
+library(lubridate)
+library(DT)
 
 
 # Run global script ---------------------------------------
@@ -47,6 +49,7 @@ server <- function(input, output, session) {
   source("Server/ukmap.R", local = TRUE)
   source("Server/ukdata.R", local = TRUE)
   source("Server/globalmap.R", local = TRUE)
+  source("Server/contribute.R", local = TRUE)
 }
 
 

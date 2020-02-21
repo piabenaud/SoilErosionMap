@@ -203,6 +203,7 @@ methods <- c("NA",
 
 
 processes <- c("NA",
+               "Water",
                "Water - sheetwash",
                "Water - rills",
                "Water - gullies",
@@ -223,7 +224,8 @@ scales <- c("NA",
 
 
 fields <- c("Long", "Lat", "start_date", "end_date", 
-            "land_cover", "land_use", "texture", 
+            "land_cover", "land_use", "textures", "textures_gen", "texture_class", 
+            "Annual_precipitation", "Precip_intensity",
             "method", "process", "scale", 
             "Rslt_Mean", "Rslt_Med", "Rslt_Net", 
             "Source_ref",  "Collector_Ref", "Link")
