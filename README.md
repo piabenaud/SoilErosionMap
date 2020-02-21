@@ -1,9 +1,9 @@
 # SoilErosionMap
 ### An open-source and open-access resource for the soil erosion community.
 
-The interactive web application can be viewed at [SoilErosionMap]
+The interactive web application can be viewed at [SoilErosionMap] or ran locally using the instructions below.
 
-This work sits alongside a peer-reviewed [Geoderma] publication [Benaud et al. (2020)] *National-scale geodata describe widespread accelerated soil erosion.* 
+This work sits alongside a peer-reviewed [Geoderma] publication [Benaud et al. (In review)] *National-scale geodata describe widespread accelerated soil erosion.* 
 
 This work was undertaken as part of Defra-funded Project [SP1311]: *Piloting a cost-effective for monitoring soil erosion in England and Wales*.
 
@@ -11,14 +11,14 @@ Further information about the geodatabase can be found at <WEBLINK>.
 
 ---
 
-To run the app locally, please run the following in your R console.: 
+To run the app locally, please run the following in your R console: 
 ```R
 library(shiny)
 runGitHub( "SoilErosionMap", "piabenaud")
 ```
 To do this you will need the following packages, which can be installed by running this code in your R console:
  ```R
- install.packages(c("shiny", "leaflet", "ggplot", "dplyr", "readr", "rgdal", "scales"))
+ install.packages(c("shiny", "leaflet", "ggplot", "dplyr", "readr", "rgdal", "scales", "lubridate", "DT", "htmltools"))
  ```
  R can be downloaded from <https://www.r-project.org/> and I use the Rstudio IDE, available from <https://rstudio.com/products/rstudio/download/>
  
@@ -36,7 +36,7 @@ This code has been developed using some of the code from the Shiny [SuperZip] ex
 
 [SoilErosionMap]: https://piabenaud.shinyapps.io/SoilErosionMap
 [Geoderma]: https://www.journals.elsevier.com/geoderma
-[Benaud et al. (2020)]: DOI
+[Benaud et al. (In review)]: DOI
 [Pia Benaud]: http://geography.exeter.ac.uk/staff/index.php?web_id=Pia_Benaud
 [Superzip]: https://github.com/rstudio/shiny-examples/tree/master/063-superzip-example
 [jcheng5]: https://github.com/jcheng5
