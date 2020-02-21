@@ -33,12 +33,12 @@ h1, h2, h3, h4 { font-weight: 400; }
 }
 #controls:hover {
   /* Fade in while hovering */
-  opacity: 0.95;
+  opacity: 0.90;
   transition-delay: 0;
 }
 
 body { 
-background-color: #F8F8F8
+background-color: white
 }
 
 /* Position and style citation */

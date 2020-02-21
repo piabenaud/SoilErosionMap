@@ -1,197 +1,172 @@
 
 
+# Load packages -----------------------------------------------------------
+
 library(shiny)
-library(shinyjs)
-## shinysky is to customize buttons
-#library(shinysky)
-library(DT)
-library(data.table)
+library(dplyr)
 library(lubridate)
-#library(shinyalert)
+library(DT)
 
-rm(list = ls())
-#useShinyalert()
-
-  
 
 # Initiate datatable ------------------------------------------------------
   
 globaldata <- reactiveValues()
-globaldata <- setNames(data.table(matrix(nrow = 0, ncol = length(fields))), fields)   ##update at another point to tibble for better names
-globaldata
 
-  
-  
-  #### Build_global is the id of DT table
+globaldata$Data <- tibble(
+  "Longitude" = 50.7369, 
+  "Latitute" = -3.5315, 
+  "start_date" = ymd("2019-10-06"), 
+  "end_date" = today(), 
+  "land_cover" = "Arable", 
+  "land_use" = "Bare", 
+  "textures" = "medium sandy loam", 
+  "textures_gen" = "sandy loam", 
+  "texture_class" = "SSEW", 
+  "Annual_precipitation" = 811, 
+  "Precip_intensity" = "NA",
+  "method" = "Volumetric - remote sensing", 
+  "process" = "Water", 
+  "scale" = "Plot",
+  "obs_count" = 6,
+  "Rslt_Mean" = 10.01, 
+  "Rslt_Med" = 4.01, 
+  "Rslt_Net" = "NA", 
+  "Source_ref" = "Benaud et al., (2020) Made up paper title. Journalname. Vol Issue",  
+  "Collector_Ref" = "Benaud, P.", 
+  "Link" = "https://github.com/piabenaud/SoilErosionMap")
+
+ 
+# Render the UI based on input --------------------------------------------
+
+  #### Build_global is the id to use in the UI
   output$Build_global <-renderUI({
-    fluidPage(
-      hr(),
-      column(6, offset = 6,
-             HTML('<div class="btn-group" role="group" aria-label="Basic example" style = "padding:10px">'),
-             div(style="display:inline-block;width:30%;text-align: center;",actionButton(inputId = "Add_row_head", label = "Add") ),
-             div(style="display:inline-block;width:30%;text-align: center;",actionButton(inputId = "Del_row_head", label = "Delete") ),
-             HTML('</div>') ),
-      
-      column(12,dataTableOutput("Main_table_trich")),
-      tags$script("$(document).on('click', '#Main_table_trich button', function () {
-                   Shiny.onInputChange('lastClickId',this.id);
-                   Shiny.onInputChange('lastClick', Math.random()) });")
-      
-    ) 
-  })
-  
-  #### render DataTable part ####
-  output$Main_table_trich<-renderDataTable({
-    DT=vals_trich$Data
-    datatable(DT,selection = 'single',
-              escape=F) })
-  
-  
+      tagList(
+             actionButton(inputId = "Add_row_head", label = "Add data"),
+             actionButton(inputId = "Del_row_head", label = "Delete row"),
+             dataTableOutput("Global_table")) 
+    })
+
+
+# Render the datatable ----------------------------------------------------
+
+  output$Global_table <- DT::renderDataTable({
+    DT::datatable(globaldata$Data,
+                  selection = 'single',
+                  escape = FALSE,
+                  extensions = c('FixedColumns','FixedHeader'),
+                  options = list(
+                    orderClasses = TRUE,
+                    dom = 'frtlip',
+                    fixedColumns = list(leftColumns = 4),
+                    fixedHeader = TRUE))
+    })
+
+
+# Pop up for data entry ---------------------------------------------------
+
   observeEvent(input$Add_row_head, {
     ### This is the pop up board for input a new row
-    showModal(modalDialog(title = "Add a new row",
-                          dateInput(paste0("Date_add", input$Add_row_head), "Date:", value = Sys.Date()),
-                          textInput(paste0("Description_add", input$Add_row_head), "Description"),
-                          textInput(paste0("Names_add", input$Add_row_head), "Name"),
-                          numericInput(paste0("Request_add", input$Add_row_head), "Request Number:",0),  
-                          selectInput(paste0("Completed_add", input$Add_row_head), "Status:",choices=c("Yes", "On progress")),
-                          textInput(paste0("Comments_add", input$Add_row_head), "Comments"), 
+    showModal(modalDialog(title = "Add a new erosion observation",
+                          h4("Location Data"),
+                          p("Please report in WSG84 (EPSG:4326) coordinate system."),
+                          numericInput(paste0("Long_add", input$Add_row_head), "Longitude:", NA),
+                          numericInput(paste0("Lat_add", input$Add_row_head), "Latitude:", NA),
+                          h4("Study Dates"),
+                          dateInput(paste0("start_date_add", input$Add_row_head), "Start date:", value = Sys.Date()),
+                          dateInput(paste0("end_date_add", input$Add_row_head), "End date:", value = Sys.Date()),
+                          selectInput(paste0("land_cover_add", input$Add_row_head), "Land cover:", choices = landcover, selectize=FALSE),
+                          selectInput(paste0("land_use_add", input$Add_row_head), "Land use:", choices = landuse, selectize=FALSE),
+                          selectInput(paste0("textures_add", input$Add_row_head), "Texture (with size):", choices = textures, selectize=FALSE),
+                          selectInput(paste0("texture_gen_add", input$Add_row_head), "Texture:", choices = textures_gen, selectize=FALSE),
+                          selectInput(paste0("texture_class_add", input$Add_row_head), "Texture classification:", choices = texture_class, selectize=FALSE),
+                          numericInput(paste0("annual_add", input$Add_row_head), "Annual precipitation:", NA),
+                          numericInput(paste0("intense_add", input$Add_row_head), "Precipitation intensity:", NA),
+                          selectInput(paste0("method_add", input$Add_row_head), "Study method:", choices = methods, selectize=FALSE),
+                          selectInput(paste0("process_add", input$Add_row_head), "Process:", choices = processes, selectize=FALSE),
+                          selectInput(paste0("scale_add", input$Add_row_head), "Study scale:", choices = scales, selectize=FALSE),
+                          numericInput(paste0("obs_add", input$Add_row_head), "Number of fields or replicates:", NA),
+                          h4("Erosion Rate Data"),
+                          p(HTML("Please report in t ha<sup>-1</sup> yr<sup>-1</sup>, NA if not appropriate.")),
+                          numericInput(paste0("mean_add", input$Add_row_head), "Mean rate:", NA),
+                          numericInput(paste0("med_add", input$Add_row_head), "Median rate:", NA),
+                          numericInput(paste0("net_add", input$Add_row_head), "Net rate:", NA),
+                          textInput(paste0("source_add", input$Add_row_head), "Citation:", value = "NA"),
+                          textInput(paste0("collector_add", input$Add_row_head), "Contributor name:", value = "NA"),
+                          textInput(paste0("link_add", input$Add_row_head), "Link or DOI:", value = "NA"),
                           actionButton("go", "Add item"),
                           easyClose = TRUE, footer = NULL ))
-    
-  })
-  ### Add a new row to DT  
+    })
+
+
+# Add the new data to the datatable ---------------------------------------
+
   observeEvent(input$go, {
-    new_row=data.frame(
-      Date=as.character( input[[paste0("Date_add", input$Add_row_head)]] ),
-      Description=input[[paste0("Description_add", input$Add_row_head)]],
-      Names=input[[paste0("Names_add", input$Add_row_head)]],
-      Request=input[[paste0("Request_add", input$Add_row_head)]],
-      Completed=input[[paste0("Completed_add", input$Add_row_head)]],
-      Comments=input[[paste0("Comments_add", input$Add_row_head)]]
-    )
-    vals_trich$Data<-rbind(vals_trich$Data,new_row )
+    new_row <- tibble(
+      "Longitude" = input[[paste0("Long_add", input$Add_row_head)]], 
+      "Latitute" = input[[paste0("Lat_add", input$Add_row_head)]], 
+      "start_date" = input[[paste0("start_date_add", input$Add_row_head)]],
+      "end_date" = input[[paste0("end_date_add", input$Add_row_head)]], 
+      "land_cover" = input[[paste0("land_cover_add", input$Add_row_head)]], 
+      "land_use" = input[[paste0("land_use_add", input$Add_row_head)]], 
+      "textures" = input[[paste0("textures_add", input$Add_row_head)]], 
+      "textures_gen" = input[[paste0("texture_gen_add", input$Add_row_head)]], 
+      "texture_class" = input[[paste0("texture_class_add", input$Add_row_head)]], 
+      "Annual_precipitation" = input[[paste0("annual_add", input$Add_row_head)]],
+      "Precip_intensity" = input[[paste0("intense_add", input$Add_row_head)]],
+      "method" = input[[paste0("method_add", input$Add_row_head)]],
+      "process" = input[[paste0("process_add", input$Add_row_head)]],
+      "scale" = input[[paste0("scale_add", input$Add_row_head)]],
+      "obs_count" = input[[paste0("obs_add", input$Add_row_head)]],
+      "Rslt_Mean" = input[[paste0("mean_add", input$Add_row_head)]], 
+      "Rslt_Med" = input[[paste0("med_add", input$Add_row_head)]], 
+      "Rslt_Net" = input[[paste0("net_add", input$Add_row_head)]],
+      "Source_ref" = input[[paste0("source_add", input$Add_row_head)]],  
+      "Collector_Ref" = input[[paste0("collector_add", input$Add_row_head)]],
+      "Link" = input[[paste0("link_add", input$Add_row_head)]],
+      )
+    globaldata$Data<-rbind(globaldata$Data,new_row )
     removeModal()
   })
   
   
-  
-  
-  ### save to RDS part 
-  observeEvent(input$Updated_trich,{
-    saveRDS(vals_trich$Data, "note.rds")
-    shinyalert(title = "Saved!", type = "success")
-  })
-  
-  
-  
-  ### delete selected rows part
-  ### this is warning messge for deleting
+# Delete row function -----------------------------------------------------
+
+# warning message
   observeEvent(input$Del_row_head,{
     showModal(
-      if(length(input$Main_table_trich_rows_selected)>=1 ){
+      if(length(input$Global_table_rows_selected)>=1 ){
         modalDialog(
           title = "Warning",
-          paste("Are you sure delete",length(input$Main_table_trich_rows_selected),"rows?" ),
+          paste("Are you sure you want to delete",length(input$Global_table_rows_selected),"rows?" ),
           footer = tagList(
             modalButton("Cancel"),
             actionButton("ok", "Yes")
           ), easyClose = TRUE)
       }else{
         modalDialog(
-          title = "Warning",
-          paste("Please select row(s) that you want to delect!" ),easyClose = TRUE
-        )
+          title = "Attention",
+          paste("Please select the row(s) you wish to delete" ), 
+          easyClose = TRUE)
       }
       
     )
   })
   
-  ### If user say OK, then delete the selected rows
+  # delete rows function on pressing 'Yes'
   observeEvent(input$ok, {
-    vals_trich$Data=vals_trich$Data[-input$Main_table_trich_rows_selected]
+    globaldata$Data=globaldata$Data[-input$Global_table_rows_selected]
     removeModal()
   })
   
-  ### edit button
-  observeEvent(input$mod_row_head,{
-    showModal(
-      if(length(input$Main_table_trich_rows_selected)>=1 ){
-        modalDialog(
-          fluidPage(
-            h3(strong("Modification"),align="center"),
-            hr(),
-            dataTableOutput('row_modif'),
-            actionButton("save_changes","Save changes"),
-            tags$script(HTML("$(document).on('click', '#save_changes', function () {
-                             var list_value=[]
-                             for (i = 0; i < $( '.new_input' ).length; i++)
-                             {
-                             list_value.push($( '.new_input' )[i].value)
-                             }
-                             Shiny.onInputChange('newValue', list_value) });")) ), size="l" )
-      }else{
-        modalDialog(
-          title = "Warning",
-          paste("Please select the row that you want to edit!" ),easyClose = TRUE
-        )
-      }
-      
-    )
-  })
   
-  
-  
-  
-  #### modify part
-  output$row_modif<-renderDataTable({
-    selected_row=input$Main_table_trich_rows_selected
-    old_row=vals_trich$Data[selected_row]
-    row_change=list()
-    for (i in colnames(old_row))
-    {
-      if (is.numeric(vals_trich$Data[[i]]))
-      {
-        row_change[[i]]<-paste0('<input class="new_input" value= ','"',old_row[[i]],'"','  type="number" id=new_',i,' ><br>')
-      } 
-      else if( is.Date(vals_trich$Data[[i]])){
-        row_change[[i]]<-paste0('<input class="new_input" value= ','"',old_row[[i]],'"',' type="date" id=new_  ',i,'  ><br>') 
-      }
-      else 
-        row_change[[i]]<-paste0('<input class="new_input" value= ','"',old_row[[i]],'"',' type="textarea"  id=new_',i,'><br>')
-    }
-    row_change=as.data.table(row_change)
-    setnames(row_change,colnames(old_row))
-    DT=row_change
-    DT 
-  },escape=F,options=list(dom='t',ordering=F,scrollX = TRUE),selection="none" )
-  
-  
-  
-  ### This is to replace the modified row to existing row
-  observeEvent(input$newValue,
-               {
-                 newValue=lapply(input$newValue, function(col) {
-                   if (suppressWarnings(all(!is.na(as.numeric(as.character(col)))))) {
-                     as.numeric(as.character(col))
-                   } else {
-                     col
-                   }
-                 })
-                 DF=data.frame(lapply(newValue, function(x) t(data.frame(x))))
-                 colnames(DF)=colnames(vals_trich$Data)
-                 vals_trich$Data[input$Main_table_trich_rows_selected]<-DF
-                 
-               }
-  )
-  ### This is nothing related to DT Editor but I think it is nice to have a download function in the Shiny so user 
-  ### can download the table in csv
-  output$Trich_csv<- downloadHandler(
+# Download csv function ---------------------------------------------------
+
+  output$Erosion_csv<- downloadHandler(
     filename = function() {
-      paste("Trich Project-Progress", Sys.Date(), ".csv", sep="")
+      paste("Soil_erosion_observations", Sys.Date(), ".csv", sep="")
     },
     content = function(file) {
-      write.csv(data.frame(vals_trich$Data), file, row.names = F)
+      write.csv(tibble(globaldata$Data), file, row.names = FALSE)
     }
   )
 

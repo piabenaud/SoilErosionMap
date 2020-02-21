@@ -15,7 +15,7 @@ output$erosiontable <- DT::renderDataTable({
                   fixedColumns = list(leftColumns = 4),
                   fixedHeader = TRUE,
                   deferRender = TRUE,
-                  scrollY = 500,
+                  scrollY = 480,
                   scroller = TRUE,
                   columnDefs = list(list(
                     targets = 20,

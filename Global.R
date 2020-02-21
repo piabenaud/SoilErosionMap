@@ -203,6 +203,7 @@ methods <- c("NA",
 
 
 processes <- c("NA",
+               "Water",
                "Water - sheetwash",
                "Water - rills",
                "Water - gullies",
