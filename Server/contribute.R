@@ -124,7 +124,7 @@ globaldata$Data <- tibble(
       "Collector_Ref" = input[[paste0("collector_add", input$Add_row_head)]],
       "Link" = input[[paste0("link_add", input$Add_row_head)]],
       )
-    globaldata$Data<-rbind(globaldata$Data,new_row )
+    globaldata$Data <- rbind(globaldata$Data,new_row)
     removeModal()
   })
   
@@ -137,7 +137,7 @@ globaldata$Data <- tibble(
       if(length(input$Global_table_rows_selected)>=1 ){
         modalDialog(
           title = "Warning",
-          paste("Are you sure you want to delete",length(input$Global_table_rows_selected),"rows?" ),
+          paste("Are you sure you want to delete this row?" ),
           footer = tagList(
             modalButton("Cancel"),
             actionButton("ok", "Yes")
@@ -145,7 +145,7 @@ globaldata$Data <- tibble(
       }else{
         modalDialog(
           title = "Attention",
-          paste("Please select the row(s) you wish to delete" ), 
+          paste("Please select the row you wish to delete." ), 
           easyClose = TRUE)
       }
       
@@ -154,7 +154,7 @@ globaldata$Data <- tibble(
   
   # delete rows function on pressing 'Yes'
   observeEvent(input$ok, {
-    globaldata$Data=globaldata$Data[-input$Global_table_rows_selected]
+    globaldata$Data <- globaldata$Data[-input$Global_table_rows_selected,]
     removeModal()
   })
   
