@@ -133,6 +133,7 @@ landuse <- c("NA",
              "Winter cereal",
              "Spring maize",
              "Spring cereal",
+             "Potatoes",
              "Bog",
              "Upland Grassland",
              "Upland Heath",
@@ -188,7 +189,8 @@ textures_gen <- c("NA",
               "clay")
 
 
-texture_class <- c("SSEW",
+texture_class <- c("NA",
+                   "SSEW",
                    "USDA",
                    "Other")
 
@@ -231,6 +233,5 @@ fields <- c("Long", "Lat", "start_date", "end_date",
             "Source_ref",  "Collector_Ref", "Link")
 
 
-fieldsMandatory <- c("Long", "Lat", "start_date", "end_date", 
-                     "Rslt_Mean", "Rslt_Med", "Rslt_Net", "Source_ref" )
+
 

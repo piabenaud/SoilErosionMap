@@ -31,6 +31,7 @@ globaldata$Data <- tibble(
   "Rslt_Mean" = 10.01, 
   "Rslt_Med" = 4.01, 
   "Rslt_Net" = "NA", 
+  "Rslt_Vol" = 6.66,
   "Source_ref" = "Benaud et al., (2020) Made up paper title. Journalname. Vol Issue",  
   "Collector_Ref" = "Benaud, P.", 
   "Link" = "https://github.com/piabenaud/SoilErosionMap")
@@ -90,6 +91,7 @@ globaldata$Data <- tibble(
                           numericInput(paste0("mean_add", input$Add_row_head), "Mean rate:", NA),
                           numericInput(paste0("med_add", input$Add_row_head), "Median rate:", NA),
                           numericInput(paste0("net_add", input$Add_row_head), "Net rate:", NA),
+                          numericInput(paste0("vol_add", input$Add_row_head), "Volumetric rate:", NA),
                           textInput(paste0("source_add", input$Add_row_head), "Citation:", value = "NA"),
                           textInput(paste0("collector_add", input$Add_row_head), "Contributor name:", value = "NA"),
                           textInput(paste0("link_add", input$Add_row_head), "Link or DOI:", value = "NA"),
@@ -120,6 +122,8 @@ globaldata$Data <- tibble(
       "Rslt_Mean" = input[[paste0("mean_add", input$Add_row_head)]], 
       "Rslt_Med" = input[[paste0("med_add", input$Add_row_head)]], 
       "Rslt_Net" = input[[paste0("net_add", input$Add_row_head)]],
+      "Rslt_Net" = input[[paste0("net_add", input$Add_row_head)]],
+      "Rslt_Vol" = input[[paste0("vol_add", input$Add_row_head)]],
       "Source_ref" = input[[paste0("source_add", input$Add_row_head)]],  
       "Collector_Ref" = input[[paste0("collector_add", input$Add_row_head)]],
       "Link" = input[[paste0("link_add", input$Add_row_head)]],
@@ -142,14 +146,14 @@ globaldata$Data <- tibble(
             modalButton("Cancel"),
             actionButton("ok", "Yes")
           ), easyClose = TRUE)
-      }else{
+      }
+      else {
         modalDialog(
           title = "Attention",
           paste("Please select the row you wish to delete." ), 
           easyClose = TRUE)
       }
-      
-    )
+      )
   })
   
   # delete rows function on pressing 'Yes'
