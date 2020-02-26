@@ -35,11 +35,12 @@ varsG <- c(
 
 # Link together the ui ----------------------------------------------------
 
-ui <- navbarPage("Soil Erosion Geodatabase", id="nav",
+ui <- navbarPage("SoilErosionMap", id="nav",
                  tabPanel("UK map", source("Ui/ukmap.R", local = TRUE)),
                  tabPanel("UK geodata explorer", source("Ui/ukdata.R", local = TRUE)),
                  tabPanel("Global map", source("Ui/globalmap.R", local = TRUE)),
-                 tabPanel("Contribute data", source("Ui/contribute.R", local = TRUE))
+                 tabPanel("Contribute data", source("Ui/contribute.R", local = TRUE)),
+                 tabPanel("About", source("Ui/about.R", local = TRUE))
                 )
 
 
