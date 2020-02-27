@@ -54,12 +54,13 @@ globaldata$Data <- tibble(
     DT::datatable(globaldata$Data,
                   selection = 'single',
                   escape = FALSE,
-                  extensions = c('FixedColumns','FixedHeader'),
+                  extensions = c('FixedColumns','FixedHeader', 'Scroller'),
                   options = list(
                     orderClasses = TRUE,
                     dom = 'frtlip',
                     fixedColumns = list(leftColumns = 4),
-                    fixedHeader = TRUE))
+                    fixedHeader = TRUE,
+                    scrollX = TRUE))
     })
 
 
