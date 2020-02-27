@@ -3,9 +3,13 @@
 
 Users can explore soil erosion observations in the UK and globally though interacting with the maps. Clicking on any of the observations will open a pop-up with information about the record. The colours of the circles can be changed to reflect the soil erosion rate, the study methods and the sampling strategy via the drop down menus in the observation explorer. The plots in the observation explorer change with the data visible on screen - zoom in to see the distribution of erosion rates in a specific area.
 
+---
+
 SoilErosionMap was produced alongside the peer-reviewed publication [Benaud et al. (In review)] National-scale geodata describe widespread accelerated soil erosion. *Geoderma* XX X. 
 
-Further information about the geodatabase can be found at the [SoilErosionMap] github page or at <http://exeter.ac.uk/creww/xxxx>.
+Empirical, spatiotemporally explicit and on-site soil erosion observations have been sourced from peer-reviewd literature, goverment-funded project reports and the personal datasets of willing members of the scientific soil erosion community. All of the data has been standardised to a 1 km grid to meet anonymity conditions of certain datasets. To allow clusters of observations to be visualised, a further small amount of randomisation has been applied to all data.
+
+Further information about the geodatabase can be found in [Benaud et al. (In review)], at the [SoilErosionMap] github page, or at <http://exeter.ac.uk/creww/xxxx>.
 
 ---
 
