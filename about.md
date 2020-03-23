@@ -1,7 +1,7 @@
 ### SoilErosionMap
 #### An open-source and open-access resource for the soil erosion community.
 
-Users can explore soil erosion observations in the UK and globally though interacting with the maps. Clicking on any of the observations will open a pop-up with information about the record. The colours of the circles can be changed to reflect the soil erosion rate, the study methods and the sampling strategy via the drop down menus in the observation explorer. The plots in the observation explorer change with the data visible on screen - zoom in to see the distribution of erosion rates in a specific area.
+Users can explore soil erosion observations in the UK and globally though interacting with the maps. Clicking on any of the observations will open a pop-up with information about the record. The colours of the circles can be changed using the drop down menus in the observation explorer to reflect the: soil erosion rate, study methods and sampling strategy. The plots in the observation explorer change with the data visible on screen - zoom in to see the distribution of erosion rates in a specific area.
 
 ---
 
