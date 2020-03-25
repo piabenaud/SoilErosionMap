@@ -145,7 +145,9 @@ landuse <- c("NA",
              "Vineyard",
              "Olive Orchard",
              "Fruit Orchard",
-             "Experimental")
+             "Experimental", 
+             "Lay",
+             "Grassland")
 
 
 textures <- c("NA",
