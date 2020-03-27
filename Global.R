@@ -12,8 +12,13 @@ library(rgdal) # to load shapefiles and change coords (Needs libary(sp) as part 
 
 # Load the geodatabase ----------------------------------------------------
 
-erosiondata <- read_csv('Data/main_database_WGS.csv')
+erosiondata <- read_csv("Data/main_database_WGS.csv")
 #head(erosiondata) # quick sense check
+
+global_erosiondata <- read_csv("Data/global_soilerosion.csv")
+#head(global_erosiondata)
+
+#Encoding(global_erosiondata$Collector_Ref)
 
 
 # Load and transform transect data ----------------------------------------
@@ -124,7 +129,10 @@ landcover <- c("NA",
                "Woodland",
                "Badlands",
                "Orchard",
-               "Horticulture")
+               "Horticulture",
+               "Forestry",
+               "Shruband",
+               "Other")
 
 
 landuse <- c("NA",
@@ -147,7 +155,8 @@ landuse <- c("NA",
              "Fruit Orchard",
              "Experimental", 
              "Lay",
-             "Grassland")
+             "Pasture",
+             "Other")
 
 
 textures <- c("NA",

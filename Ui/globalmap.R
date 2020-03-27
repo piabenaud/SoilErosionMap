@@ -18,12 +18,11 @@
                            
                            h2("Observation explorer"),
                            
-                           plotOutput("histRateG", height = 220),
-                           plotOutput("methRateG", height = 200)
+                           plotOutput("histRateG", height = 300)
              ),
              
              tags$div(id="cite",
-                      'Data compiled following Benaud et al., (Journalname, 2019) DOIlink.'
+                      'Data compiled following Benaud et al., (Geoderma, 2020) DOIlink.'
              )
          )
   )

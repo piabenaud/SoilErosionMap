@@ -6,30 +6,25 @@
 
 # Set the colour palette --------------------------------------------------
 
-palG <- colorBin(c("black", "#31688EFF", "#35B779FF", "#440154FF", "#FDE725FF"), erosiondata$Rslt_Analysis, c(0.000,0.01,1,10,100,10000), pretty = FALSE)
+palG <- colorBin(c("black", "#31688EFF", "#35B779FF", "#440154FF", "#FDE725FF"), global_erosiondata$Rslt_Vis, c(0.000,0.01,1,10,100,10000), pretty = FALSE)
 
 
 # Determine pop-up content ------------------------------------------------
 
-popup_g <- paste0("<b>","Land Cover: ","</b>", erosiondata$Land_cover, "<br>",
-                    "<b>","Study ID: ","</b>", erosiondata$Site_ID, "<br>",
-                    "<b>","Study Start: ","</b>", htmlEscape(erosiondata$Stdy_Start), "<br>",
-                    "<b>","Study Finish: ","</b>", htmlEscape(erosiondata$Stdy_Fin), "<br>",
-                    "<b>","County: ","</b>", erosiondata$County_Dis, "<br>",
-                    "<b>","Soil Association: ","</b>", htmlEscape(erosiondata$Soil_Assoc), "<br>",
-                    "<b>","Method: ","</b>", erosiondata$Stdy_Meth1, "<br>",
-                    "<b>","Scale: ","</b>", erosiondata$Stdy_Scale, "<br>",
-                    "<b>","Site selection: ","</b>", erosiondata$Site_selection, "<br>",
-                    "<b>","Erosion rate: Mean: ","</b>", erosiondata$Rslt_Mean, "<br>",
-                    "<b>","Erosion rate: Median: ","</b>", erosiondata$Rslt_Med, "<br>",
-                    "<b>","Erosion rate: Minimum: ","</b>", erosiondata$Rslt_Min, "<br>",
-                    "<b>","Erosion rate: Maximum: ","</b>", erosiondata$Rslt_Max, "<br>",
-                    "<b>","Erosion rate: Net: ","</b>", erosiondata$Rslt_Net, "<br>",
-                    "<b>","Erosion rate: Gross: ","</b>", erosiondata$Rslt_Gross, "<br>",
-                    "<b>","Erosion volume: ","</b>", erosiondata$Rslt_Vol, "<br>",
-                    "<b>","Erosion rate: Calculations: ","</b>", erosiondata$Rslt_Analysis, "<br>",
-                    "<b>","Reference: ","</b>", erosiondata$Reference, "<br>",
-                    "<b>","<a href='", erosiondata$Link, "' target='_blank'>", "Link</a>","</b>")
+popup_g <- paste0("<b>","Land Cover: ","</b>", global_erosiondata$land_cover, "<br>",
+                  "<b>","Study Start: ","</b>", htmlEscape(global_erosiondata$start_date), "<br>",
+                  "<b>","Study Finish: ","</b>", htmlEscape(global_erosiondata$end_date), "<br>",
+                  "<b>","Country: ","</b>", global_erosiondata$Country, "<br>",
+                  "<b>","Method: ","</b>", global_erosiondata$method, "<br>",
+                  "<b>","Scale: ","</b>", global_erosiondata$scale, "<br>",
+                  "<b>","Erosion rate: Mean: ","</b>", global_erosiondata$Rslt_Mean, "<br>",
+                  "<b>","Erosion rate: Median: ","</b>", global_erosiondata$Rslt_Med, "<br>",
+                  "<b>","Erosion rate: Net: ","</b>", global_erosiondata$Rslt_Net, "<br>",
+                  "<b>","Erosion volume: ","</b>", global_erosiondata$Rslt_Vol, "<br>",
+                  "<b>","Erosion rate: Displayed: ","</b>", global_erosiondata$Rslt_Vis, "<br>",
+                  "<b>","Reference: ","</b>", global_erosiondata$Source_ref, "<br>",
+                  "<b>","Collector: ","</b>", global_erosiondata$Collector_Ref, "<br>",
+                  "<b>","<a href='", global_erosiondata$Link, "' target='_blank'>", "Link</a>","</b>")
 
 
 # Make the map ------------------------------------------------------------
@@ -40,7 +35,7 @@ output$mapG <- renderLeaflet({
     addProviderTiles(providers$OpenStreetMap.Mapnik) %>%
     addProviderTiles(providers$Esri.WorldImagery,
                      options = providerTileOptions(opacity = 0.5)) %>%
-    addCircleMarkers(data = erosiondata, group = "Cluster", ~Long, ~Lat, layerId=~Site_ID, stroke=FALSE, fillOpacity=0.7,  
+    addCircleMarkers(data = global_erosiondata, group = "Cluster", ~Long, ~Lat, layerId=~Obs_num, stroke=FALSE, fillOpacity=0.7,  
                      clusterOptions = markerClusterOptions(iconCreateFunction=JS("function (cluster) {      
                                                                                  var childCount = cluster.getChildCount(); 
                                                                                  var c = ' marker-cluster-';  
@@ -53,13 +48,13 @@ output$mapG <- renderLeaflet({
                                                                                  }    
                                                                                  return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
 }"))) %>%
-      addCircles(data = erosiondata, group = "Erosion Rate", ~Long, ~Lat, radius= 1500, layerId=~Site_ID,
-                 stroke=FALSE, fillOpacity=0.65, fillColor = ~palG(Rslt_Analysis), popup = popup_g) %>%
+      addCircles(data = global_erosiondata, group = "Erosion Rate", ~Long, ~Lat, radius= 1500, layerId=~Obs_num,
+                 stroke=FALSE, fillOpacity=0.65, fillColor = ~palG(Rslt_Vis), popup = popup_g) %>%
     addLayersControl(
       options = layersControlOptions(collapsed = FALSE),
       overlayGroups = c("Cluster", "Erosion Rate"),
       position = "topleft") %>%
-    addLegend("topleft", group = "Erosion Rate", pal=palG, values=erosiondata$Rslt_Analysis, title= "Erosion Rate",
+    addLegend("topleft", group = "Erosion Rate", pal=palG, values=global_erosiondata$Rslt_Vis, title= "Erosion Rate",
               layerId="colorLegend")
   })
 
@@ -70,16 +65,16 @@ output$mapG <- renderLeaflet({
 # A reactive expression that returns the set of observations that are in bounds right now
 obsInBoundsG <- reactive({
   if (is.null(input$mapG_bounds))
-    return(erosiondata[FALSE,])
+    return(global_erosiondata[FALSE,])
   bounds <- input$mapG_bounds
   latRng <- range(bounds$north, bounds$south)
   lngRng <- range(bounds$east, bounds$west)
   
   
-  subset(erosiondata,
+  subset(global_erosiondata,
          Lat >= latRng[1] & Lat <= latRng[2] &
            Long >= lngRng[1] & Long <= lngRng[2] &
-           Land_cover == "Arable")
+           land_cover == "Arable")
 })
 
 output$histRateG <- renderPlot({
@@ -87,9 +82,9 @@ output$histRateG <- renderPlot({
   if (nrow(obsInBoundsG()) == 0)
     return(NULL)
   
-  ggplot(obsInBoundsG(), aes(Rslt_Analysis)) +     ####################### NEED TO UPDATE   
+  ggplot(obsInBoundsG(), aes(Rslt_Vis)) +      
     geom_histogram(colour= "gray20", fill="#4575b4", binwidth = 0.1) + 
-    scale_y_continuous(breaks=c(0,1,10,50),trans="log1p", labels=c(0,1,10,50), limits = c(0, 50)) + 
+    scale_y_continuous(breaks=c(0,1,10,50,100),trans="log1p", labels=c(0,1,10,50, 100), limits = c(0, 100)) + 
     scale_x_continuous(breaks=c(0,1,10,100),trans="log1p",labels=c(0,1,10,100), limits = c(0, 100)) +
     labs(title = "Erosion rate for visible arable records", x = expression(Erosion~rate~(t~ha^{-1}~yr^{-1})), y = "Frequency")+
     theme_classic() + 
@@ -97,25 +92,4 @@ output$histRateG <- renderPlot({
           plot.title = element_text(colour = "gray20", size = 12, face = "bold"))
 })
 
-#study methods boxplot
-output$methRateG <- renderPlot({
-  # If no observations are in view, don't plot
-  if (nrow(obsInBoundsG()) == 0)
-    return(NULL)
-  
-  ggplot(obsInBoundsG(), aes(Stdy_Meth1, Rslt_Analysis)) +  ####################### NEED TO UPDATE 
-    stat_boxplot(geom ='errorbar') +
-    geom_boxplot(colour= "gray20",
-                 fill="#4575b4",
-                 outlier.alpha = 0.25)+
-    scale_y_continuous(breaks=c(0,1,10,100),trans="log1p", labels=c(0,1,10,100), limits = c(-0.15, 100)) +
-    #scale_x_discrete(labels = function(x) str_wrap(x, width = 10), limits=c("Volumetric survey", "Runoff and sediment collection", "Caesium-137")) +
-    scale_x_discrete(limits = c("Volumetric survey", "Runoff and sediment collection", "Caesium-137"), labels = c("Volumetric\nsurvey", "Runoff and\nsediment\ncollection", "Caesium-137")) +
-    labs( x= "Monitoring Technique", y = expression(Erosion~rate~(t~ha^{-1}~yr^{-1})), caption = "Based on data presented in DOI, where 0 = not detected") +
-    theme_classic() + 
-    theme(axis.title = element_text(size = 10.5)) +
-    stat_summary(fun.data = n_fun, geom = "text", size = 2.5, colour= "gray20", position = position_dodge(.9))  ## adds n to plot
-}) 
 
-
-## Done
