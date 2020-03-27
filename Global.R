@@ -212,6 +212,7 @@ methods <- c("NA",
              "Volumetric - other",
              "Caesium-137",
              "Runoff and sediment collection",
+             "Other tracer",
              "Other")
 
 
