@@ -25,7 +25,7 @@ To do this you will need the following packages, which can be installed by runni
  
 ---
 
-To cite this resource please use <DOI:TBD> (Journal article) and [![DOI](https://zenodo.org/badge/DOI/http://10.5281/zenodo.3670112.svg)](https://doi.org/http://10.5281/zenodo.3670112) (GitHub code). 
+To cite this resource please use <DOI:TBD> (Journal article) and [![DOI](https://zenodo.org/badge/DOI/http://10.5281/zenodo.3736496.svg)](https://doi.org/http://10.5281/zenodo.3736496) (GitHub code). 
 
 For future collaborations or to suggest improvements to the Shiny app please contact [Pia Benaud] at the University of Exeter, UK. 
 
