@@ -1,11 +1,11 @@
 # SoilErosionMap
-### An open-source and open-access resource for the soil erosion community.
+### An open source and open access resource for the soil erosion community.
 
 ![alt text][map]
 
 The interactive web application can be viewed at [SoilErosionMap] or ran locally using the instructions below.
 
-This work sits alongside a peer-reviewed [Geoderma] publication [Benaud et al. (In review)] *National-scale geodata describe widespread accelerated soil erosion.* 
+This work sits alongside a peer-reviewed [Geoderma] publication [Benaud et al. (2020)] *National-scale geodata describe widespread accelerated soil erosion.* 
 
 This work was undertaken as part of Defra-funded Project [SP1311]: *Piloting a cost-effective for monitoring soil erosion in England and Wales*.
 
@@ -37,7 +37,7 @@ This code has been developed using some of the code from the Shiny [SuperZip] ex
 [map]: UK-MAP.jpg
 [SoilErosionMap]: https://piabenaud.shinyapps.io/SoilErosionMap
 [Geoderma]: https://www.journals.elsevier.com/geoderma
-[Benaud et al. (In review)]: DOI
+[Benaud et al. (2020)]: https://doi.org/10.1016/j.geoderma.2020.114378
 [Pia Benaud]: http://geography.exeter.ac.uk/staff/index.php?web_id=Pia_Benaud
 [Superzip]: https://github.com/rstudio/shiny-examples/tree/master/063-superzip-example
 [jcheng5]: https://github.com/jcheng5

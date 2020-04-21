@@ -22,7 +22,7 @@
              ),
              
              tags$div(id="cite",
-                      'Data compiled following Benaud et al., (Geoderma, 2020) DOIlink.'
+                      'Data compiled following Benaud et al., (2020, Geoderma).'
              )
          )
   )

@@ -27,7 +27,7 @@
              ),
              
              tags$div(id="cite",
-                      'Data compiled for ', tags$em('National-scale geodata describe widespread accelerated soil erosion'), ' by Pia Benaud et al., (Geoderma, 2020) DOIlink.'
+                      'Data compiled for ', tags$em('National-scale geodata describe widespread accelerated soil erosion'), 'by Pia Benaud et al., (2020, Geoderma)'
              )
          )
 )
