@@ -4,8 +4,8 @@
              
              tags$head(
                # Include our custom CSS
-               includeCSS("styles.css"),
-               includeHTML("google_analytics.html")#,
+               includeCSS("styles.css") #,
+               #includeHTML("google_analytics.html")#,
                #includeScript("gomap.js")   #add this in at later date
              ),
              
