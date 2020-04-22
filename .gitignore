@@ -4,3 +4,5 @@
 .Ruserdata
 README.html
 rsconnect/**
+.gitignore
+google_analytics.html
